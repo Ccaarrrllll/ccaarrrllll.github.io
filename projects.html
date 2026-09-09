@@ -2,10 +2,30 @@
 layout: page
 title: Projects
 ---
-<section class="list">
-    {% for post in site.posts %}
-        {% if post.projects %}
-            {% if post.hidden != true %}
+{% assign categories = "" | split: "" %}
+{% for post in site.posts %}
+    {% if post.projects and post.hidden != true and post.project-category %}
+        {% unless categories contains post.project-category %}
+            {% assign categories = categories | push: post.project-category %}
+        {% endunless %}
+    {% endif %}
+{% endfor %}
+{% assign categories = categories | sort %}
+
+{% if categories.size > 0 %}
+    <section class="filter">
+        {% for category in categories %}
+            <a class="item" href="#{{ category | slugify }}">{{ category }}</a>
+        {% endfor %}
+    </section>
+{% endif %}
+
+{% for category in categories %}
+    <section class="list">
+        <h2 class="title" id="{{ category | slugify }}">{{ category }}</h2>
+
+        {% for post in site.posts %}
+            {% if post.projects and post.hidden != true and post.project-category == category %}
                 <div class="item {% if post.star %}star{% endif %}">
                     <a class="url" href="{% if post.externalLink %}{{ post.externalLink }}{% else %}{{ site.url }}{{ post.url }}{% endif %}">
                         <aside><time datetime="{{ post.date | date:"%d-%m-%Y" }}">{{ post.date | date: "%b %d %Y" }}</time></aside>
@@ -13,6 +33,20 @@ title: Projects
                     </a>
                 </div>
             {% endif %}
+        {% endfor %}
+    </section>
+{% endfor %}
+
+{% comment %} projects without a project-category still show in one uncategorized list {% endcomment %}
+<section class="list">
+    {% for post in site.posts %}
+        {% if post.projects and post.hidden != true and post.project-category == nil %}
+            <div class="item {% if post.star %}star{% endif %}">
+                <a class="url" href="{% if post.externalLink %}{{ post.externalLink }}{% else %}{{ site.url }}{{ post.url }}{% endif %}">
+                    <aside><time datetime="{{ post.date | date:"%d-%m-%Y" }}">{{ post.date | date: "%b %d %Y" }}</time></aside>
+                    <h3 class="title">{{ post.title }}</h3>
+                </a>
+            </div>
         {% endif %}
     {% endfor %}
 </section>
