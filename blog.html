@@ -3,15 +3,12 @@ layout: page
 title: Blog
 ---
 <section class="list">
-	{% if site.posts.size == 0 %}
+	{% assign blog_posts = site.posts | where: "category", "blog" | where_exp: "post", "post.hidden != true" %}
+	{% if blog_posts.size == 0 %}
 		<p class="text-center">Nothing published yet!</p>
 	{% else %}
-		{% for post in site.posts %}
-			{% if post.category == 'blog' %}
-				{% if post.hidden != true %}
-					{% include blog-post.html %}
-				{% endif %}
-			{% endif %}
+		{% for post in blog_posts %}
+			{% include blog-post.html %}
 		{% endfor %}
 	{% endif %}
 </section>
