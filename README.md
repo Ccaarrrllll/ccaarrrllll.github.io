@@ -1,4 +1,4 @@
-# My GitHub Page - Ccaarrrllll.GitHub.io
+# My GitHub Page
 
 This is my personal GitHub Pages site, built with Jekyll.
 
